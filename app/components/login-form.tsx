@@ -6,20 +6,15 @@ import { Link } from "@remix-run/react";
 import { useTranslation } from "~/hooks/useTranslation";
 import { useFetcher } from "~/hooks/useFetcher";
 import { REDIRECT_TO_KEY } from "~/constants";
+import { useRedirectTo } from "~/hooks/useRedirectTo";
 
 export function LoginForm({
   className,
 }: React.ComponentPropsWithoutRef<"form">) {
-  const redirectTo =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get(REDIRECT_TO_KEY) || "/"
-      : "/";
   const { t } = useTranslation();
-  const { fetcher } = useFetcher<string>({
-    success: (data) => {
-      console.log("success", data);
-    },
-  });
+  const { fetcher } = useFetcher<string>({});
+  const redirectTo = useRedirectTo();
+
   return (
     <fetcher.Form
       method="post"

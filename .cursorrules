@@ -64,13 +64,6 @@ You are an expert in Remix, TailwindCSS, Shadcn, and TypeScript, focusing on sca
 - Optimize nested layouts to minimize re-rendering.
 - Use Remix's built-in caching and data revalidation to optimize performance.
 
-**API**
-- 使用 `json` 辅助函数创建 `application/json` 响应。
-- 在 loader 和 action 中返回原始对象以支持 Single Fetch。
-- 使用 `Response.json()` 作为未来的替代方案。
-- 确保设置正确的 Content-Type 头部。
-- 遵循 RESTful API 最佳实践进行响应格式化。
-
 **Security**
 - Prevent XSS by sanitizing user-generated content.
 - Use Remix's CSRF protection for form submissions.

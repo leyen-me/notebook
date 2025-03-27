@@ -18,6 +18,13 @@ model SysUser {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
 }
+
+model MbkFile {
+  id        String   @id @default(uuid())
+  pid       String   @default("0")
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

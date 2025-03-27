@@ -2,27 +2,15 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Link, useFetcher } from "@remix-run/react";
-import { useEffect } from "react";
+import { Link } from "@remix-run/react";
 import { useTranslation } from "~/hooks/useTranslation";
-import { Result } from "~/utils/result.server";
+import { useFetcher } from "~/hooks/useFetcher";
 
 export function SignupForm({
   className,
 }: React.ComponentPropsWithoutRef<"form">) {
   const { t } = useTranslation();
-  const fetcher = useFetcher();
-
-  useEffect(() => {
-    if (fetcher.data) {
-      const data = fetcher.data as Result;
-      if (data.code === 200) {
-        alert("注册成功");
-      } else {
-        alert(t(data.message));
-      }
-    }
-  }, [fetcher.data]);
+  const { fetcher } = useFetcher<string>({});
 
   return (
     <fetcher.Form

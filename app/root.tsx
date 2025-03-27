@@ -1,4 +1,4 @@
-import "./tailwind.css";
+import "~/tailwind.css";
 import {
   Links,
   Meta,
@@ -13,15 +13,17 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { I18nContext } from "~/hooks/useTranslation";
-import { getLang } from "./utils/env.server";
-import { requireUser } from "./utils/auth.server";
+import { getLang } from "~/utils/env.server";
+import { requireUser } from "~/utils/auth.server";
+import { Toaster } from "~/components/ui/toaster";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const lang = getLang();
   if (request.url.includes("/login") || request.url.includes("/signup")) {
-    return getLang();
+    return lang;
   }
   await requireUser(request);
-  return getLang();
+  return lang;
 };
 
 export const meta: MetaFunction = () => {
@@ -57,6 +59,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </head>
         <body>
           {children}
+          <Toaster />
           <ScrollRestoration />
           <Scripts />
         </body>
