@@ -5,7 +5,7 @@ import { Label } from "~/components/ui/label";
 import { Link } from "@remix-run/react";
 import { useTranslation } from "~/hooks/useTranslation";
 import { useFetcher } from "~/hooks/useFetcher";
-import { REDIRECT_TO_KEY } from "~/constants";
+import { API_ROUTES, AUTH_ROUTES, REDIRECT_TO_KEY } from "~/constants";
 import { useRedirectTo } from "~/hooks/useRedirectTo";
 
 export function LoginForm({
@@ -18,6 +18,7 @@ export function LoginForm({
   return (
     <fetcher.Form
       method="post"
+      action={API_ROUTES.API_AUTH_LOGIN}
       className={cn("flex flex-col gap-6", className)}
     >
       <input type="hidden" name={REDIRECT_TO_KEY} value={redirectTo} />
@@ -50,7 +51,7 @@ export function LoginForm({
       </div>
       <div className="text-center text-sm">
         {t("login.signup_prefix")}{" "}
-        <Link to="/signup" className="underline underline-offset-4">
+        <Link to={AUTH_ROUTES.SIGNUP} className="underline underline-offset-4">
           {t("login.signup")}
         </Link>
       </div>

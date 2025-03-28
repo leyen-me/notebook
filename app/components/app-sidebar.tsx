@@ -25,38 +25,29 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
+import { useTranslation } from "~/hooks/useTranslation";
+import { NbkFile } from "@prisma/client";
+import { TreeNode } from "~/utils/tree.server";
 
-// This is sample data.
-const data = {
-  tree: [
-    [
-      "app",
-      [
-        "api",
-        ["hello", ["route.ts"]],
-        "page.tsx",
-        "layout.tsx",
-        ["blog", ["page.tsx"]],
-      ],
-    ],
-    [
-      "components",
-      ["ui", "button.tsx", "card.tsx"],
-      "header.tsx",
-      "footer.tsx",
-    ],
-    ["lib", ["util.ts"]],
-    ["public", "favicon.ico", "vercel.svg"],
-    ".eslintrc.json",
-    ".gitignore",
-    "next.config.js",
-    "tailwind.config.js",
-    "package.json",
-    "README.md",
-  ],
+type FileItemEventProps = {
+  onNewFolder?: ({ pid }: { pid: string | null }) => void;
+  onNewFile?: ({ pid }: { pid: string | null }) => void;
+  onDelete?: ({ id }: { id: string }) => void;
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> &
+  FileItemEventProps & {
+    fileTree: TreeNode<NbkFile>[];
+  };
+
+export function AppSidebar({
+  fileTree,
+  onNewFolder,
+  onNewFile,
+  onDelete,
+  ...props
+}: AppSidebarProps) {
+  const { t } = useTranslation();
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -66,8 +57,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarGroupLabel>Files</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {data.tree.map((item, index) => (
-                    <Tree key={index} item={item} />
+                  {fileTree.map((item, index) => (
+                    <Tree
+                      key={index}
+                      item={item}
+                      onNewFolder={onNewFolder}
+                      onNewFile={onNewFile}
+                      onDelete={onDelete}
+                    />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -75,21 +72,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
-        <ContextMenuContent>
-          <ContextMenuItem>Profile</ContextMenuItem>
-          <ContextMenuItem>Billing</ContextMenuItem>
-          <ContextMenuItem>Team</ContextMenuItem>
-          <ContextMenuItem>Subscription</ContextMenuItem>
+        <ContextMenuContent className="w-44">
+          <ContextMenuItem
+            onClick={() => {
+              onNewFolder?.({ pid: null });
+            }}
+          >
+            {t("app.sidebar.new_folder")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              onNewFile?.({ pid: null });
+            }}
+          >
+            {t("app.sidebar.new_file")}
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenuTrigger>
     </ContextMenu>
   );
 }
 
-function Tree({ item }: { item: string | any[] }) {
-  const [name, ...items] = Array.isArray(item) ? item : [item];
+type TreeProps = {
+  item: TreeNode<NbkFile>;
+} & FileItemEventProps;
 
-  if (!items.length) {
+function Tree({ item, onNewFolder, onNewFile, onDelete }: TreeProps) {
+  const { name, type } = item.meta;
+  const { t } = useTranslation();
+
+  if (type === "FILE") {
     return (
       <ContextMenu>
         <ContextMenuTrigger
@@ -115,10 +127,7 @@ function Tree({ item }: { item: string | any[] }) {
 
   return (
     <SidebarMenuItem>
-      <Collapsible
-        // className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={name === "components" || name === "ui"}
-      >
+      <Collapsible defaultOpen={name === "components" || name === "ui"}>
         <ContextMenu>
           <ContextMenuTrigger
             onContextMenu={(e) => {
@@ -134,34 +143,39 @@ function Tree({ item }: { item: string | any[] }) {
             </CollapsibleTrigger>
           </ContextMenuTrigger>
           <ContextMenuContent>
-            <ContextMenuItem>文件夹1</ContextMenuItem>
-            <ContextMenuItem>文件夹2</ContextMenuItem>
-          </ContextMenuContent>
-        </ContextMenu>
-
-        {/* <CollapsibleTrigger asChild>
-          <ContextMenu>
-            <ContextMenuTrigger
-              onContextMenu={(e) => {
-                e.stopPropagation();
+            <ContextMenuItem
+              onClick={() => {
+                onNewFolder?.({ pid: item.id });
               }}
             >
-              <SidebarMenuButton>
-                <ChevronRight className="transition-transform" />
-                <Folder />
-                {name}
-              </SidebarMenuButton>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>文件夹1</ContextMenuItem>
-              <ContextMenuItem>文件夹2</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
-        </CollapsibleTrigger> */}
+              {t("app.sidebar.new_folder")}
+            </ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => {
+                onNewFile?.({ pid: item.id });
+              }}
+            >
+              {t("app.sidebar.new_file")}
+            </ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => {
+                onDelete?.({ id: item.id });
+              }}
+            >
+              {t("nbk.file.delete")}
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {items.map((subItem, index) => (
-              <Tree key={index} item={subItem} />
+            {item.children.map((subItem, index) => (
+              <Tree
+                key={index}
+                item={subItem}
+                onNewFolder={onNewFolder}
+                onNewFile={onNewFile}
+                onDelete={onDelete}
+              />
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>

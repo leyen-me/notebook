@@ -1,5 +1,12 @@
 export default {
   "common.unknown_error": "Server Unknown error",
+  "common.submit": "Submit",
+  "common.cancel": "Cancel",
+  "common.success": "Success",
+  "common.delete": "Delete",
+  "common.delete_success": "Delete success",
+  "common.delete_confirm_description": "Are you sure you want to delete this file?",
+
   "login.title": "Login to your account",
   "login.description": "Enter your email below to login to your account",
   "login.email": "Email",
@@ -19,5 +26,17 @@ export default {
   "signup.signup": "Sign up",
   "signup.login": "Login",
   "signup.login_prefix": "Already have an account?",
-  "signup.error.user_already_exists": "User already exists"
+  "signup.error.user_already_exists": "User already exists",
+
+  "app.sidebar.new_folder": "New Folder",
+  "app.sidebar.new_file": "New File",
+
+  "nbk.file.name": "Name",
+  "nbk.file.create": "Create New File",
+  "nbk.file.create_description": "Create a new file in the current folder.",
+  "nbk.file.update": "Update File",
+  "nbk.file.update_description": "Update the file in the current folder.",
+  "nbk.file.delete": "Delete",
+  "nbk.file.rename": "Rename",
+  "nbk.file.copy": "Copy"
 };

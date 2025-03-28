@@ -7,9 +7,11 @@ import { useToast } from "./use-toast";
 export function useFetcher<T>({
   success,
   fail,
+  action,
 }: {
   success?: (data: T) => void;
   fail?: (data: T) => void;
+  action: string;
 }) {
   const fetcher = useFetcherOrigin();
   const { t } = useTranslation();
@@ -42,5 +44,12 @@ export function useFetcher<T>({
     }
   }, [fetcher.data]);
 
-  return { fetcher };
+  const submit = (data?: any) => {
+    fetcher.submit(data || null, {
+      method: "POST",
+      action: action,
+    });
+  };
+
+  return { fetcher, action, submit };
 }

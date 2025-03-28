@@ -1,6 +1,6 @@
 import { redirect } from "@remix-run/node";
 import { getSession } from "~/utils/session.server";
-import { REDIRECT_TO_KEY, SESSION_KEYS } from "~/constants";
+import { AUTH_ROUTES, REDIRECT_TO_KEY, SESSION_KEYS } from "~/constants";
 // 获取用户会话信息
 export async function getUserFromSession(request: Request) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -22,7 +22,7 @@ export async function requireUser(
   const user = await getUserFromSession(request);
   if (!user) {
     const searchParams = new URLSearchParams([[REDIRECT_TO_KEY, redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
+    throw redirect(AUTH_ROUTES.LOGIN + `?${searchParams}`);
   }
   return user;
 }

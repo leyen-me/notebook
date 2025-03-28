@@ -5,6 +5,7 @@ import { Label } from "~/components/ui/label";
 import { Link } from "@remix-run/react";
 import { useTranslation } from "~/hooks/useTranslation";
 import { useFetcher } from "~/hooks/useFetcher";
+import { API_ROUTES, AUTH_ROUTES } from "~/constants";
 
 export function SignupForm({
   className,
@@ -16,6 +17,7 @@ export function SignupForm({
     <fetcher.Form
       className={cn("flex flex-col gap-6", className)}
       method="post"
+      action={API_ROUTES.API_AUTH_SIGNUP}
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">{t("signup.title")}</h1>
@@ -46,7 +48,7 @@ export function SignupForm({
       </div>
       <div className="text-center text-sm">
         {t("signup.login_prefix")}{" "}
-        <Link to="/login" className="underline underline-offset-4">
+        <Link to={AUTH_ROUTES.LOGIN} className="underline underline-offset-4">
           {t("signup.login")}
         </Link>
       </div>

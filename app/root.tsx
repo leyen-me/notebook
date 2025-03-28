@@ -16,10 +16,11 @@ import { I18nContext } from "~/hooks/useTranslation";
 import { getLang } from "~/utils/env.server";
 import { requireUser } from "~/utils/auth.server";
 import { Toaster } from "~/components/ui/toaster";
+import { AUTH_WHITE_ROUTES } from "./constants";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const lang = getLang();
-  if (request.url.includes("/login") || request.url.includes("/signup")) {
+  if (AUTH_WHITE_ROUTES.some((path) => request.url.includes(path))) {
     return lang;
   }
   await requireUser(request);

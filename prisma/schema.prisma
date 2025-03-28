@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum NbkFileType {
+  FOLDER
+  FILE
+}
+
 model SysUser {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -20,11 +25,12 @@ model SysUser {
   createdAt DateTime @default(now())
 }
 
-model MbkFile {
-  id        String   @id @default(uuid())
-  pid       String   @default("0")
+model NbkFile {
+  id        String      @id @default(uuid())
+  pid       String?
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  type      NbkFileType
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  sort      Int         @default(0)
 }
-

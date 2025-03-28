@@ -1,5 +1,3 @@
-import { LoginForm } from "~/components/login-form";
-import AuthLayout from "~/components/auth-layout";
 import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { loginByPassword } from "~/services/auth.server";
 import { handleActionErrors } from "~/utils/error-handler.server";
@@ -11,7 +9,7 @@ export async function action({ request }: LoaderFunctionArgs) {
     const formData = await request.formData();
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const redirectTo = (formData.get(REDIRECT_TO_KEY) as string);
+    const redirectTo = formData.get(REDIRECT_TO_KEY) as string;
     const user = await loginByPassword({ email, password });
     const session = await getSession(request.headers.get("Cookie"));
     session.set(SESSION_KEYS.USER_ID, user.id);
@@ -21,12 +19,4 @@ export async function action({ request }: LoaderFunctionArgs) {
       },
     });
   });
-}
-
-export default function Login() {
-  return (
-    <AuthLayout>
-      <LoginForm />
-    </AuthLayout>
-  );
 }
