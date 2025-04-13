@@ -1,7 +1,7 @@
 import { useFetcher as useFetcherOrigin } from "@remix-run/react";
 import { useEffect } from "react";
 import { Result } from "~/utils/result.server";
-import { useTranslation } from "./useTranslation";
+import { useTranslation } from "./use-translation";
 import { useToast } from "./use-toast";
 
 export function useFetcher<T>({

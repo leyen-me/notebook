@@ -32,23 +32,30 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
-import { API_ROUTES, DIALOG_OPEN_TYPE, DialogOpenType } from "~/constants";
-import { useFetcher } from "~/hooks/useFetcher";
+import { API_ROUTES, DIALOG_OPEN_TYPE, DialogOpenType, NBK_FILE_CONTENT_ENUM, NBK_FILE_TYPE_ENUM } from "~/constants";
+import { useFetcher } from "~/hooks/use-fetcher";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
-import { NbkFile, NbkFileType } from "@prisma/client";
+import { NbkFile, NbkFileContentType, NbkFileType } from "@prisma/client";
 import { useToast } from "~/hooks/use-toast";
-import { useTranslation } from "~/hooks/useTranslation";
+import { useTranslation } from "~/hooks/use-translation";
 import { TreeNode } from "~/utils/tree.server";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 interface CreateOrUpdateDialogState {
   isOpen: boolean;
   type: DialogOpenType;
-
   id: string | null;
   pid: string | null;
   fileType: NbkFileType;
+  contentType: NbkFileContentType;
   name?: string;
 }
 
@@ -57,10 +64,10 @@ type CreateOrUpdateFileDialogProps = {
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
   openType: DialogOpenType;
-
   id: string | null;
   pid: string | null;
   fileType: NbkFileType;
+  contentType?: NbkFileContentType;
   name?: string;
 };
 
@@ -69,10 +76,10 @@ export function CreateOrUpdateFileDialog({
   onOpenChange,
   onSuccess,
   openType,
-
   id,
   pid,
   fileType,
+  contentType = NBK_FILE_CONTENT_ENUM.TABLE,
   name = "",
 }: CreateOrUpdateFileDialogProps) {
   const { t } = useTranslation();
@@ -114,6 +121,23 @@ export function CreateOrUpdateFileDialog({
               </Label>
               <Input name="name" className="col-span-3" defaultValue={name} />
             </div>
+            {fileType === NBK_FILE_TYPE_ENUM.FILE && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="contentType" className="text-right">
+                  {t("nbk.file.content_type")}
+                </Label>
+                <Select name="contentType" defaultValue={contentType}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder={t("nbk.file.select_content_type")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NBK_FILE_CONTENT_ENUM.TABLE}>{t("nbk.file.table")}</SelectItem>
+                    <SelectItem value={NBK_FILE_CONTENT_ENUM.MINDMAP}>{t("nbk.file.mindmap")}</SelectItem>
+                    <SelectItem value={NBK_FILE_CONTENT_ENUM.MARKDOWN}>{t("nbk.file.markdown")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button type="submit">{t("common.submit")}</Button>
@@ -173,6 +197,7 @@ export default function Index() {
   const [activeFile, setActiveFile] = useState<string>("");
   const { toast } = useToast();
   const { t } = useTranslation();
+
   const { submit: loadFileTreeSubmit } = useFetcher<TreeNode<NbkFile>[]>({
     action: API_ROUTES.API_NBK_FILE_TREE,
     success: (data) => {
@@ -186,7 +211,8 @@ export default function Index() {
       type: DIALOG_OPEN_TYPE.CREATE as DialogOpenType,
       id: null,
       pid: null,
-      fileType: "FILE",
+      fileType: NBK_FILE_TYPE_ENUM.FILE,
+      contentType: NBK_FILE_CONTENT_ENUM.TABLE,
       name: "",
     });
   const [deleteDialogState, setDeleteDialogState] =
@@ -236,7 +262,8 @@ export default function Index() {
       type: DIALOG_OPEN_TYPE.CREATE as DialogOpenType,
       id: null,
       pid,
-      fileType: "FOLDER",
+      fileType: NBK_FILE_TYPE_ENUM.FOLDER,
+      contentType: NBK_FILE_CONTENT_ENUM.TABLE,
     });
   };
 
@@ -246,7 +273,8 @@ export default function Index() {
       type: DIALOG_OPEN_TYPE.CREATE as DialogOpenType,
       id: null,
       pid,
-      fileType: "FILE",
+      fileType: NBK_FILE_TYPE_ENUM.FILE,
+      contentType: NBK_FILE_CONTENT_ENUM.TABLE,
     });
   };
 
@@ -278,6 +306,7 @@ export default function Index() {
       id,
       pid: null,
       fileType,
+      contentType: "TABLE",
       name,
     });
   };
@@ -365,6 +394,7 @@ export default function Index() {
         id={createOrUpdateDialogState.id}
         pid={createOrUpdateDialogState.pid}
         fileType={createOrUpdateDialogState.fileType}
+        contentType={createOrUpdateDialogState.contentType}
         name={createOrUpdateDialogState.name}
       />
 

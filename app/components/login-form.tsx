@@ -3,10 +3,10 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Link } from "@remix-run/react";
-import { useTranslation } from "~/hooks/useTranslation";
-import { useFetcher } from "~/hooks/useFetcher";
+import { useTranslation } from "~/hooks/use-translation";
+import { useFetcher } from "~/hooks/use-fetcher";
 import { API_ROUTES, AUTH_ROUTES, REDIRECT_TO_KEY } from "~/constants";
-import { useRedirectTo } from "~/hooks/useRedirectTo";
+import { useRedirectTo } from "~/hooks/use-redirect-to";
 
 export function LoginForm({
   className,

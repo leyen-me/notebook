@@ -71,6 +71,11 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+
+      // 关闭 no-explicit-any 规则
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
     },
 
     // Node

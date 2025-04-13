@@ -12,11 +12,11 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { I18nContext } from "~/hooks/useTranslation";
+import { I18nContext } from "~/hooks/use-translation";
 import { getLang } from "~/utils/env.server";
 import { requireUser } from "~/utils/auth.server";
 import { Toaster } from "~/components/ui/toaster";
-import { AUTH_WHITE_ROUTES } from "./constants";
+import { AUTH_WHITE_ROUTES } from "~/constants";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const lang = getLang();

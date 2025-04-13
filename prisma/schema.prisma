@@ -18,6 +18,22 @@ enum NbkFileType {
   FILE
 }
 
+enum NbkFileContentType {
+  TABLE
+  MINDMAP
+  MARKDOWN
+}
+
+enum ColumnType {
+  STRING
+  NUMBER
+  BOOLEAN
+  DATE
+  DATETIME
+  TEXT
+  JSON
+}
+
 model SysUser {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -25,12 +41,40 @@ model SysUser {
   createdAt DateTime @default(now())
 }
 
+model NbkTable {
+  id          String           @id @default(uuid())
+  fileId      String          @unique
+  file        NbkFile         @relation(fields: [fileId], references: [id])
+  name        String
+  description String?
+  columns     NbkTableColumn[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model NbkTableColumn {
+  id          String      @id @default(uuid())
+  tableId     String
+  table       NbkTable   @relation(fields: [tableId], references: [id])
+  name        String
+  type        ColumnType
+  description String?
+  isRequired  Boolean     @default(false)
+  sort        Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([tableId, name])
+}
+
 model NbkFile {
-  id        String      @id @default(uuid())
-  pid       String?
-  name      String
-  type      NbkFileType
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  sort      Int         @default(0)
+  id          String            @id @default(uuid())
+  pid         String?
+  name        String
+  type        NbkFileType
+  contentType NbkFileContentType?
+  table       NbkTable?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  sort        Int               @default(0)
 }

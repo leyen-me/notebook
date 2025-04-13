@@ -41,6 +41,11 @@ export default {
   "nbk.file.delete": "Delete",
   "nbk.file.rename": "Rename",
   "nbk.file.copy": "Copy",
+  "nbk.file.content_type": "Content Type",
+  "nbk.file.select_content_type": "Select Content Type",
+  "nbk.file.table": "Table",
+  "nbk.file.mindmap": "Mindmap",
+  "nbk.file.markdown": "Markdown",
 
   "file.error.missing_fields": "Missing required fields",
   "file.error.not_found": "File not found",

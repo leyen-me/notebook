@@ -1,3 +1,5 @@
+import { NbkFileContentType, NbkFileType } from "@prisma/client";
+
 export const APP_NAME = "Notebook";
 
 export const REDIRECT_TO_KEY = "redirectTo";
@@ -21,7 +23,7 @@ export const API_ROUTES = {
   API_NBK_FILE_CREATE: "/api/nbk/file/create",
   API_NBK_FILE_UPDATE: "/api/nbk/file/update",
   API_NBK_FILE_DELETE: "/api/nbk/file/delete",
-  
+
   API_NBK_FILE_MOVE: "/api/nbk/file/move",
 };
 
@@ -39,3 +41,17 @@ export const AUTH_WHITE_ROUTES = [
   "/public/about",
   "/public/product",
 ];
+
+export const NBK_FILE_TYPE_ENUM: Record<NbkFileType, NbkFileType> = {
+  FOLDER: "FOLDER",
+  FILE: "FILE",
+};
+
+export const NBK_FILE_CONTENT_ENUM: Record<
+  NbkFileContentType,
+  NbkFileContentType
+> = {
+  TABLE: "TABLE",
+  MINDMAP: "MINDMAP",
+  MARKDOWN: "MARKDOWN",
+};

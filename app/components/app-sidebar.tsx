@@ -28,9 +28,10 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
-import { useTranslation } from "~/hooks/useTranslation";
+import { useTranslation } from "~/hooks/use-translation";
 import { NbkFile, NbkFileType } from "@prisma/client";
 import { TreeNode } from "~/utils/tree.server";
+import { NBK_FILE_TYPE_ENUM } from "~/constants";
 
 type FileItemEventProps = {
   onClick?: ({ id }: { id: string }) => void;
@@ -91,7 +92,7 @@ function Tree({
     (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (type === "FOLDER") {
+      if (type === NBK_FILE_TYPE_ENUM.FOLDER) {
         e.dataTransfer.dropEffect = "move";
         setIsDraggingOver(true);
       } else {
@@ -156,7 +157,7 @@ function Tree({
     return null;
   };
 
-  if (type === "FILE") {
+  if (type === NBK_FILE_TYPE_ENUM.FILE) {
     return (
       <ContextMenu>
         <ContextMenuTrigger
@@ -192,14 +193,14 @@ function Tree({
         <ContextMenuContent>
           <ContextMenuItem
             onClick={() => {
-              onRename?.({ id: item.id, name, fileType: "FILE" });
+              onRename?.({ id: item.id, name, fileType: NBK_FILE_TYPE_ENUM.FILE });
             }}
           >
             {t("nbk.file.rename")}
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
-              onCopy?.({ id: item.id, fileType: "FILE" });
+              onCopy?.({ id: item.id, fileType: NBK_FILE_TYPE_ENUM.FILE });
             }}
           >
             {t("nbk.file.copy")}
@@ -266,14 +267,14 @@ function Tree({
             </ContextMenuItem>
             <ContextMenuItem
               onClick={() => {
-                onRename?.({ id: item.id, name, fileType: "FOLDER" });
+                onRename?.({ id: item.id, name, fileType: NBK_FILE_TYPE_ENUM.FOLDER });
               }}
             >
               {t("nbk.file.rename")}
             </ContextMenuItem>
             <ContextMenuItem
               onClick={() => {
-                onCopy?.({ id: item.id, fileType: "FOLDER" });
+                onCopy?.({ id: item.id, fileType: NBK_FILE_TYPE_ENUM.FOLDER });
               }}
             >
               {t("nbk.file.copy")}

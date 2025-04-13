@@ -1,4 +1,5 @@
 import { NbkFile, Prisma } from "@prisma/client";
+import { NBK_FILE_TYPE_ENUM } from "~/constants";
 import { prisma } from "~/utils/prisma.server";
 import { buildTree, TreeNode } from "~/utils/tree.server";
 
@@ -19,7 +20,7 @@ export const getFileTree = async () => {
   });
   // 优先按文件夹的方式排序
   fileList.sort((a, b) => {
-    if (a.type === "FOLDER" && b.type === "FILE") {
+    if (a.type === NBK_FILE_TYPE_ENUM.FOLDER && b.type === NBK_FILE_TYPE_ENUM.FILE) {
       return -1;
     }
     return 0;

@@ -41,6 +41,11 @@ export default {
   "nbk.file.delete": "删除",
   "nbk.file.rename": "重命名",
   "nbk.file.copy": "复制",
+  "nbk.file.content_type": "文件类型",
+  "nbk.file.select_content_type": "选择文件类型",
+  "nbk.file.table": "表格",
+  "nbk.file.mindmap": "思维导图",
+  "nbk.file.markdown": "Markdown",
 
   "file.error.missing_fields": "缺少必要字段",
   "file.error.not_found": "文件不存在",

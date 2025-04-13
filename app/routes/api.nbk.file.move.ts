@@ -3,6 +3,7 @@ import { toSuccess } from "~/utils/result.server";
 import { handleActionErrors } from "~/utils/error-handler.server";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { ERROR_CODE } from "~/constants/error-code";
+import { NBK_FILE_TYPE_ENUM } from "~/constants";
 
 export async function action({ request }: LoaderFunctionArgs) {
   return await handleActionErrors(async () => {
@@ -46,7 +47,7 @@ export async function action({ request }: LoaderFunctionArgs) {
     }
 
     // 检查目标是否是文件夹
-    if (targetFolder.type !== "FOLDER") {
+    if (targetFolder.type !== NBK_FILE_TYPE_ENUM.FOLDER) {
       throw new Error(ERROR_CODE.FILE_ERROR_TARGET_NOT_FOLDER);
     }
 
