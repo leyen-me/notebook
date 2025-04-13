@@ -17,6 +17,13 @@ export const getFileTree = async () => {
       sort: "asc",
     },
   });
+  // 优先按文件夹的方式排序
+  fileList.sort((a, b) => {
+    if (a.type === "FOLDER" && b.type === "FILE") {
+      return -1;
+    }
+    return 0;
+  });
   return buildTree(fileList.map(buildTreeNode));
 };
 
@@ -25,6 +32,14 @@ export const createFile = async (file: Prisma.NbkFileCreateInput) => {
     data: file,
   });
   return newFile;
+};
+
+export const updateFile = async (file: Prisma.NbkFileUpdateInput) => {
+  const updatedFile = await prisma.nbkFile.update({
+    where: { id: file.id as string },
+    data: file,
+  });
+  return updatedFile;
 };
 
 export const deleteFile = async (id: string) => {

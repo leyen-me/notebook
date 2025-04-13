@@ -3,9 +3,11 @@ export default {
   "common.submit": "提交",
   "common.cancel": "取消",
   "common.success": "成功",
+  "common.fail": "失败",
   "common.delete": "删除",
   "common.delete_success": "删除成功",
   "common.delete_confirm_description": "确定要删除这个文件吗？",
+  "common.move_success": "移动成功",
 
   "login.title": "登录账户",
   "login.description": "输入你的邮箱登录到你的账户",
@@ -33,10 +35,15 @@ export default {
 
   "nbk.file.name": "名称",
   "nbk.file.create": "新建",
-  "nbk.file.create_description": "在当前文件夹新建一个文件",
+  "nbk.file.create_description": "创建文件",
   "nbk.file.update": "更新",
-  "nbk.file.update_description": "更新当前文件夹的文件",
+  "nbk.file.update_description": "修改文件",
   "nbk.file.delete": "删除",
   "nbk.file.rename": "重命名",
   "nbk.file.copy": "复制",
+
+  "file.error.missing_fields": "缺少必要字段",
+  "file.error.not_found": "文件不存在",
+  "file.error.target_not_found": "目标文件夹不存在",
+  "file.error.target_not_folder": "目标不是文件夹",
 };

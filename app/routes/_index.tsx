@@ -42,6 +42,16 @@ import { useToast } from "~/hooks/use-toast";
 import { useTranslation } from "~/hooks/useTranslation";
 import { TreeNode } from "~/utils/tree.server";
 
+interface CreateOrUpdateDialogState {
+  isOpen: boolean;
+  type: DialogOpenType;
+
+  id: string | null;
+  pid: string | null;
+  fileType: NbkFileType;
+  name?: string;
+}
+
 type CreateOrUpdateFileDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -51,6 +61,7 @@ type CreateOrUpdateFileDialogProps = {
   id: string | null;
   pid: string | null;
   fileType: NbkFileType;
+  name?: string;
 };
 
 export function CreateOrUpdateFileDialog({
@@ -62,9 +73,10 @@ export function CreateOrUpdateFileDialog({
   id,
   pid,
   fileType,
+  name = "",
 }: CreateOrUpdateFileDialogProps) {
   const { t } = useTranslation();
-  
+
   const { fetcher, action } = useFetcher<string>({
     action:
       openType === DIALOG_OPEN_TYPE.CREATE
@@ -100,7 +112,7 @@ export function CreateOrUpdateFileDialog({
               <Label htmlFor="name" className="text-right">
                 {t("nbk.file.name")}
               </Label>
-              <Input name="name" className="col-span-3" />
+              <Input name="name" className="col-span-3" defaultValue={name} />
             </div>
           </div>
           <DialogFooter>
@@ -118,6 +130,11 @@ type DeleteFileDialogProps = {
   onSuccess: (id: string) => void;
   id: string;
 };
+
+interface DeleteFileDialogState {
+  isOpen: boolean;
+  id: string;
+}
 
 export function DeleteFileDialog({
   open,
@@ -151,23 +168,17 @@ export function DeleteFileDialog({
   );
 }
 
-interface CreateOrUpdateDialogState {
-  isOpen: boolean;
-  type: DialogOpenType;
-  id: string | null;
-  pid: string | null;
-  fileType: NbkFileType;
-}
-
-interface DeleteFileDialogState {
-  isOpen: boolean;
-  id: string;
-}
-
 export default function Index() {
   const [fileTree, setFileTree] = useState<TreeNode<NbkFile>[]>([]);
+  const [activeFile, setActiveFile] = useState<string>("");
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { submit: loadFileTreeSubmit } = useFetcher<TreeNode<NbkFile>[]>({
+    action: API_ROUTES.API_NBK_FILE_TREE,
+    success: (data) => {
+      setFileTree(data);
+    },
+  });
 
   const [createOrUpdateDialogState, setCreateOrUpdateDialogState] =
     useState<CreateOrUpdateDialogState>({
@@ -176,19 +187,13 @@ export default function Index() {
       id: null,
       pid: null,
       fileType: "FILE",
+      name: "",
     });
   const [deleteDialogState, setDeleteDialogState] =
     useState<DeleteFileDialogState>({
       isOpen: false,
       id: "",
     });
-
-  const { submit: loadFileTreeSubmit } = useFetcher<TreeNode<NbkFile>[]>({
-    action: API_ROUTES.API_NBK_FILE_TREE,
-    success: (data) => {
-      setFileTree(data);
-    },
-  });
 
   const { submit: deleteFileSubmit } = useFetcher({
     action: API_ROUTES.API_NBK_FILE_DELETE,
@@ -201,6 +206,29 @@ export default function Index() {
       loadFileTreeSubmit();
     },
   });
+
+  const { submit: moveFileSubmit } = useFetcher({
+    action: API_ROUTES.API_NBK_FILE_MOVE,
+    success: () => {
+      loadFileTreeSubmit();
+      toast({
+        variant: "success",
+        title: t("common.success"),
+        description: t("common.move_success"),
+      });
+    },
+    fail: (e:string) => {
+      toast({
+        variant: "destructive",
+        title: t("common.fail"),
+        description: t(e),
+      });
+    },
+  });
+
+  const handleClick = ({ id }: { id: string }) => {
+    setActiveFile(id);
+  };
 
   const handleNewFolder = ({ pid }: { pid: string | null }) => {
     setCreateOrUpdateDialogState({
@@ -235,6 +263,44 @@ export default function Index() {
     deleteFileSubmit(formData);
   };
 
+  const handleRename = ({
+    id,
+    name,
+    fileType,
+  }: {
+    id: string;
+    name: string;
+    fileType: NbkFileType;
+  }) => {
+    setCreateOrUpdateDialogState({
+      isOpen: true,
+      type: DIALOG_OPEN_TYPE.UPDATE as DialogOpenType,
+      id,
+      pid: null,
+      fileType,
+      name,
+    });
+  };
+
+  const handleCopy = ({
+    id,
+    fileType,
+  }: {
+    id: string;
+    fileType: NbkFileType;
+  }) => {
+    console.log(id, fileType);
+  };
+
+  const handleMove = async (activeId: string, targetId: string): Promise<void> => {
+    const formData = new FormData();
+    console.log(activeId, targetId);
+    
+    formData.append('activeId', activeId);
+    formData.append('targetId', targetId);
+    moveFileSubmit(formData);
+  };
+
   useEffect(() => {
     loadFileTreeSubmit();
   }, []);
@@ -243,9 +309,14 @@ export default function Index() {
     <SidebarProvider>
       <AppSidebar
         fileTree={fileTree}
+        activeFile={activeFile}
         onNewFolder={handleNewFolder}
         onNewFile={handleNewFile}
         onDelete={handleDelete}
+        onRename={handleRename}
+        onClick={(e) => handleClick(e as { id: string })}
+        onCopy={(e) => handleCopy(e as { id: string; fileType: NbkFileType })}
+        onMove={handleMove}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -294,6 +365,7 @@ export default function Index() {
         id={createOrUpdateDialogState.id}
         pid={createOrUpdateDialogState.pid}
         fileType={createOrUpdateDialogState.fileType}
+        name={createOrUpdateDialogState.name}
       />
 
       <DeleteFileDialog

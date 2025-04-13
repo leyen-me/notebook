@@ -3,9 +3,11 @@ export default {
   "common.submit": "Submit",
   "common.cancel": "Cancel",
   "common.success": "Success",
+  "common.fail": "Fail",
   "common.delete": "Delete",
   "common.delete_success": "Delete success",
   "common.delete_confirm_description": "Are you sure you want to delete this file?",
+  "common.move_success": "Move success",
 
   "login.title": "Login to your account",
   "login.description": "Enter your email below to login to your account",
@@ -33,10 +35,15 @@ export default {
 
   "nbk.file.name": "Name",
   "nbk.file.create": "Create New File",
-  "nbk.file.create_description": "Create a new file in the current folder.",
+  "nbk.file.create_description": "Create a new file",
   "nbk.file.update": "Update File",
-  "nbk.file.update_description": "Update the file in the current folder.",
+  "nbk.file.update_description": "Update the file",
   "nbk.file.delete": "Delete",
   "nbk.file.rename": "Rename",
-  "nbk.file.copy": "Copy"
+  "nbk.file.copy": "Copy",
+
+  "file.error.missing_fields": "Missing required fields",
+  "file.error.not_found": "File not found",
+  "file.error.target_not_found": "Target folder not found",
+  "file.error.target_not_folder": "Target is not a folder",
 };

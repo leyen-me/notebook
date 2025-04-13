@@ -21,6 +21,8 @@ export const API_ROUTES = {
   API_NBK_FILE_CREATE: "/api/nbk/file/create",
   API_NBK_FILE_UPDATE: "/api/nbk/file/update",
   API_NBK_FILE_DELETE: "/api/nbk/file/delete",
+  
+  API_NBK_FILE_MOVE: "/api/nbk/file/move",
 };
 
 // 认证路由
